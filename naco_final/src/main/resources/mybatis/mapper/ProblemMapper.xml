@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.naco.mapper.ProblemMapper">
+
+    <select id="findAll" resultType="org.example.naco.domain.Problem">
+        SELECT
+        id, title, platform, difficulty, link, topic, status, memo,
+        solved_time_sec AS solvedTimeSec,
+        created_at AS createdAt,
+        updated_at AS updatedAt
+        FROM problems
+        WHERE 1=1
+        <if test="q != null and q != ''">
+            AND (title LIKE CONCAT('%', #{q}, '%') OR memo LIKE CONCAT('%', #{q}, '%'))
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="difficulty != null and difficulty != ''">
+            AND difficulty = #{difficulty}
+        </if>
+        <if test="topic != null and topic != ''">
+            AND topic = #{topic}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <select id="findById" parameterType="long" resultType="org.example.naco.domain.Problem">
+        SELECT
+            id, title, platform, difficulty, link, topic, status, memo,
+            solved_time_sec AS solvedTimeSec,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM problems
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="org.example.naco.domain.Problem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO problems (title, platform, difficulty, link, topic, status, memo, solved_time_sec)
+        VALUES (#{title}, #{platform}, #{difficulty}, #{link}, #{topic}, #{status}, #{memo}, #{solvedTimeSec})
+    </insert>
+
+    <update id="update" parameterType="org.example.naco.domain.Problem">
+        UPDATE problems
+        SET
+            title = #{title},
+            platform = #{platform},
+            difficulty = #{difficulty},
+            link = #{link},
+            topic = #{topic},
+            status = #{status},
+            memo = #{memo},
+            solved_time_sec = #{solvedTimeSec},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM problems WHERE id = #{id}
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE problems
+        SET status = #{status}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSolvedTime">
+        UPDATE problems
+        SET solved_time_sec = #{solvedTimeSec}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="finishSolve">
+        UPDATE problems
+        SET
+            solved_time_sec = #{solvedTimeSec},
+            status = 'SOLVED',
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+</mapper>

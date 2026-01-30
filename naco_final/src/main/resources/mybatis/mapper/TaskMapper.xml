@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.naco.mapper.TaskMapper">
+
+    <select id="findAll" resultType="org.example.naco.domain.Task">
+        SELECT id, title, done, created_at
+        FROM tasks
+        ORDER BY id DESC
+    </select>
+
+    <select id="findById" parameterType="long" resultType="org.example.naco.domain.Task">
+        SELECT id, title, done, created_at
+        FROM tasks
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="org.example.naco.domain.Task" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tasks (title, done, created_at)
+        VALUES (#{title}, #{done}, NOW())
+    </insert>
+
+    <update id="update" parameterType="org.example.naco.domain.Task">
+        UPDATE tasks
+        SET title = #{title},
+            done = #{done}
+        WHERE id = #{id}
+    </update>
+
+    <update id="toggleDone" parameterType="long">
+        UPDATE tasks
+        SET done = CASE WHEN done = 1 THEN 0 ELSE 1 END
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM tasks
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
