@@ -1,4 +1,4 @@
-Narim is coding (NACO)
+**Narim is coding (NACO)**
 
 - Spring MVC 기반
 - week 2+3 과제와 함께, 학습 기록을 기록할 수 있는 기능을 추가하여 만들었습니다.
